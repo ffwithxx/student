@@ -9,11 +9,15 @@
 #import "MessageCenterVC.h"
 #import "MessageCenterCell.h"
 #import "MessageDetailVC.h"
+#import "BGControl.h"
 #define  kCellName @"MessageCenterCell"
+#import <MJRefresh/MJRefresh.h>
+#import "MJRefreshComponent.h"
+#import "AFClient.h"
 
-@interface MessageCenterVC ()<UITableViewDataSource,UITableViewDelegate> {
+@interface MessageCenterVC ()<UITableViewDataSource,UITableViewDelegate,maxHeiDelegate> {
     MessageCenterCell *_cell;
-    
+      NSInteger pageIndex;
 }
 
 @end
@@ -38,6 +42,43 @@
 - (IBAction)backClick:(UIButton *)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
+- (void)first {
+    
+    MJRefreshNormalHeader *refreshHeader = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        pageIndex = 1;
+        [self getDate];
+    }];
+    
+    self.bigTableView.mj_header = refreshHeader;
+    MJRefreshBackNormalFooter *refreshFooter = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
+        pageIndex ++;
+        [self getDate];
+    }];
+    self.bigTableView.mj_footer = refreshFooter;
+    [self.bigTableView.mj_header beginRefreshing];
+}
+-(void)getDate {
+    NSString *schoolPid = [[NSUserDefaults standardUserDefaults] valueForKey:@"schoolPid"];
+    [self show];
+    [[AFClient shareInstance] noticeWithId:schoolPid witnPage:[NSString stringWithFormat:@"%ld",pageIndex] withLimit:@"20" progressBlock:^(NSProgress *progress) {
+        
+    } success:^(id responseBody) {
+        if ([[responseBody valueForKey:@"code"] integerValue] == 0) {
+            self.dataArray = [responseBody valueForKey:@"data"];
+            
+        }else{
+            [self Alert:responseBody[@"msg"]];
+        }
+        [self.bigTableView reloadData];
+        [self.bigTableView.mj_header endRefreshing];
+        [self.bigTableView.mj_footer endRefreshing];
+        [self dismiss];
+    } failure:^(NSError *error) {
+        [self.bigTableView.mj_header endRefreshing];
+        [self.bigTableView.mj_footer endRefreshing];
+        [self dismiss];
+    }];
+}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     _cell = [tableView dequeueReusableCellWithIdentifier:kCellName];
     if (!_cell) {
@@ -46,17 +87,22 @@
     CGRect cellFrame = _cell.contentView.frame;
     cellFrame.size.width = kScreenSize.width;
     [_cell.contentView setFrame:cellFrame];
-    //    XyModel *model = self.dataArray[indexPath.row];
-   
+    _cell.delegate = self;
+    NSDictionary *dict = self.dataArray[indexPath.section];
+    [_cell showModelWith:dict withIndext:indexPath.section];
     
     return _cell;
-    
-    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-   
-    return 150;
+     NSDictionary *dict = self.dataArray[indexPath.section];
+    if ([BGControl isNULLOfString:[dict valueForKey:@"maxHei"]]) {
+        return 150;
+    }else{
+        CGFloat hei = [[dict valueForKey:@"maxHei"] floatValue];
+        return hei;
+    }
+    
     
     
 }
@@ -66,17 +112,24 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     MessageDetailVC *detail = [storyboard instantiateViewControllerWithIdentifier:@"MessageDetailVC"];
+    detail.dataDict = self.dataArray[indexPath.section];
     [self.navigationController pushViewController:detail animated:YES];
     
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
-    return 10;
+  return self.dataArray.count;
     
 }
-
+- (void)Alert:(NSString *)AlertStr{
+    
+    [LYMessageToast toastWithText:AlertStr backgroundColor:[UIColor blackColor] font:[UIFont systemFontOfSize:15] fontColor:[UIColor whiteColor] duration:2.f inView:[[UIApplication sharedApplication].windows lastObject]];
+    
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

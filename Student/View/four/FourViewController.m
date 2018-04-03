@@ -11,10 +11,13 @@
 #import "addVC.h"
 #import "kantuViewController.h"
 #import "ManagementVC.h"
+#import "AFClient.h"
+#import "feedBackModel.h"
 #define kCellName @"FourCell"
-@interface FourViewController ()<UITableViewDelegate,UITableViewDataSource,maxHeiDelegate,checkDelegate> {
+@interface FourViewController ()<UITableViewDelegate,UITableViewDataSource,maxHeiDelegate,checkDelegate,downDelegate> {
     FourCell *_cell;
     NSInteger maxXHei;
+     NSString *typeStr;
 }
 
 @end
@@ -24,15 +27,52 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationController.navigationBar.hidden = YES;
-    // Do any additional setup after loading the view.
+    typeStr = @"3";
+    self.bigTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.dataArray = [[NSMutableArray alloc] init];
 }
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.hidden = YES;
+    [self getData];
+}
+- (void)getData {
+    [self show];
+    [[AFClient shareInstance]feedbackWithteacherId:@"str" withType:typeStr progressBlock:^(NSProgress *progress) {
+        
+    } success:^(id responseBody) {
+        if ([[responseBody valueForKey:@"code"] integerValue] == 0) {
+            [self.dataArray removeAllObjects];
+            NSArray *arr = [responseBody valueForKey:@"data"];
+            for (int i = 0; i <arr.count; i++) {
+                NSDictionary *dict = arr[i];
+                feedBackModel *model = [[feedBackModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.dataArray insertObject:model atIndex:0];
+                
+            }
+            
+            [self.bigTableView reloadData];
+            [self dismiss];
+        }else{
+            [self dismiss];
+            [self Alert:responseBody[@"msg"]];
+        }
+        
+        [self dismiss];
+    } failure:^(NSError *error) {
+        [self dismiss];
+    }];
+    
+}
+
 - (IBAction)addcLICK:(UIButton *)sender {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     addVC *add = [storyboard instantiateViewControllerWithIdentifier:@"addVC"];
     [self.navigationController pushViewController:add animated:YES];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 20;
+    return 1;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -50,14 +90,16 @@
     cellFrame.size.width = kScreenSize.width;
     _cell.delegate = self;
     _cell.checkDelegate = self;
+    _cell.downDelegate = self;
+    feedBackModel *model = self.dataArray[indexPath.section];
     [_cell.contentView setFrame:cellFrame];
-    [_cell showModelWithIndex:indexPath.row];
+    [_cell showModelWithIndex:indexPath.row withModel:model];
     
     return _cell;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
-    return 1;
+    return self.dataArray.count;
     
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -65,14 +107,15 @@
 }
 
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    self.navigationController.navigationBar.hidden = YES;
-}
+
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    feedBackModel *model = self.dataArray[indexPath.section];
+    UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     ManagementVC *manage = [storyboard instantiateViewControllerWithIdentifier:@"ManagementVC"];
+    manage.model = model;
     [self.navigationController pushViewController:manage animated:YES];
 }
 - (void)Alert:(NSString *)AlertStr{
@@ -96,6 +139,38 @@
     picVC.typestr = @"kan";
     picVC.IMGNum = [NSString stringWithFormat:@"%d",bthTag-100];
     [self.navigationController pushViewController:picVC animated:YES];
+}
+
+- (IBAction)buttonClick:(UIButton *)sender {
+    if (sender.tag == 301) {
+        typeStr = @"3";
+        [self.oneBth setTitleColor:KTabBarColor forState:UIControlStateNormal];
+        [self.twoBth setTitleColor:KTextgrayColor forState:UIControlStateNormal];
+        [self.threeBth setTitleColor:KTextgrayColor forState:UIControlStateNormal];
+        [self.fourBth setTitleColor:KTextgrayColor forState:UIControlStateNormal];
+    }else if (sender.tag == 302){
+        typeStr = @"0";
+        [self.oneBth setTitleColor:KTextgrayColor forState:UIControlStateNormal];
+        [self.twoBth setTitleColor:KTabBarColor forState:UIControlStateNormal];
+        [self.threeBth setTitleColor:KTextgrayColor forState:UIControlStateNormal];
+        [self.fourBth setTitleColor:KTextgrayColor forState:UIControlStateNormal];
+    }else if (sender.tag == 303){
+        typeStr = @"1";
+        [self.oneBth setTitleColor:KTextgrayColor forState:UIControlStateNormal];
+        [self.twoBth setTitleColor:KTextgrayColor forState:UIControlStateNormal];
+        [self.threeBth setTitleColor:KTabBarColor forState:UIControlStateNormal];
+        [self.fourBth setTitleColor:KTextgrayColor forState:UIControlStateNormal];
+    }else if (sender.tag == 304){
+        typeStr = @"2";
+        [self.oneBth setTitleColor:KTextgrayColor forState:UIControlStateNormal];
+        [self.twoBth setTitleColor:KTextgrayColor forState:UIControlStateNormal];
+        [self.threeBth setTitleColor:KTextgrayColor forState:UIControlStateNormal];
+        [self.fourBth setTitleColor:KTabBarColor forState:UIControlStateNormal];
+    }
+    [self getData];
+}
+- (void)downImg:(NSInteger)bthTag withDownArr:(NSArray *)downArr {
+    [self Alert:@"暂不支持此功能!"];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

@@ -22,20 +22,30 @@ typedef void(^FailureBlcok)(NSError *error);
 
 
 +(instancetype)shareInstance;
-//1.教师课表查询接口
-- (void)TeacherScheduleByTeacherId:(NSString *)teacherId progressBlock:(ProgressBlock)progress success:(SuccessBlock)success failure:(FailureBlcok)failure;
-
 - (void)loginWithUserName:(NSString *)userName passWord:(NSString *)passWord   progressBlock:(ProgressBlock)progress success:(SuccessBlock)success failure:(FailureBlcok)failure;
-//2.教师个人资料接口
-- (void)infoByStr:(NSString*)str progressBlock:(ProgressBlock)progress success:(SuccessBlock)success failure:(FailureBlcok)failure;
-//3.教师考勤管理接口
-- (void)attendance:(NSString*)str progressBlock:(ProgressBlock)progress success:(SuccessBlock)success failure:(FailureBlcok)failure;
-//5.教师修改个人密码
+
+//1.课表查询接口
+- (void)TeacherScheduleBystudentId:(NSString *)studentId progressBlock:(ProgressBlock)progress success:(SuccessBlock)success failure:(FailureBlcok)failure;
+
+//个人密码
 - (void)UpdatePasswordwithDict:(NSDictionary *)dataDict progressBlock:(ProgressBlock)progress success:(SuccessBlock)success failure:(FailureBlcok)failure;
 //6.app查询消息公告
-- (void)noticeWithId:(NSString  *)idStr  progressBlock:(ProgressBlock)progress success:(SuccessBlock)success failure:(FailureBlcok)failure;
+//6.app查询消息公告
+- (void)noticeWithId:(NSString  *)idStr witnPage:(NSString *)page withLimit:(NSString *)limit  progressBlock:(ProgressBlock)progress success:(SuccessBlock)success failure:(FailureBlcok)failure;
+//查询学生成绩
+-(void)achievementByStudent:(NSString *)studentId schoolyearId:(NSString *)schoolyearId schooltermId:(NSString *)schooltermId examtypeId:(NSString *)examtypeId projectId:(NSString *)projectId progressBlock:(ProgressBlock)progress success:(SuccessBlock)success failure:(FailureBlcok)failure;
+
+- (void)studentAttendanceWithStudent:(NSString *)studentId withStime:(NSString *)stime progressBlock:(ProgressBlock)progress success:(SuccessBlock)success failure:(FailureBlcok)failure;
+
+//4.查询发布
+- (void)feedbackWithteacherId:(NSString *)studentId withType:(NSString *)type progressBlock:(ProgressBlock)progress success:(SuccessBlock)success failure:(FailureBlcok)failure;
+
+//4.1查询回复发布详情
+-(void)FeedbackWithDetailWithDict:(NSDictionary *)dict progressBlock:(ProgressBlock)progress success:(SuccessBlock)success failure:(FailureBlcok)failure;
+- (void)techerFeedBackWithTeacher:(NSString *)teacherId withContent:(NSString *)content withFeedbackId:(NSString *)feedbackId progressBlock:(ProgressBlock)progress success:(SuccessBlock)success failure:(FailureBlcok)failure;
+
 //成绩查询接口
 - (void)getResultwithUrlStr:(NSString *)urlStr withDict:(NSDictionary *)dict progressBlock:(ProgressBlock)progress success:(SuccessBlock)success failure:(FailureBlcok)failure;
-//10.App查询详细成绩
-- (void)getResultWithDict:(NSDictionary *)dict progressBlock:(ProgressBlock)progress success:(SuccessBlock)success failure:(FailureBlcok)failure;
+
+- (void)getAchievementWithSchoolyearIdWith:(NSString *)schoolyearId withschooltermId:(NSString *)schooltermId progressBlock:(ProgressBlock)progress success:(SuccessBlock)success failure:(FailureBlcok)failure;
 @end

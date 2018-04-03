@@ -10,22 +10,18 @@
 
 @interface TestScoresVC : JJBaseController
 @property (strong, nonatomic) IBOutlet UIView *naVie;
-@property (strong, nonatomic) IBOutlet UIScrollView *bigScrollView;
-@property (strong, nonatomic) IBOutlet UIView *bigView;
+@property (strong, nonatomic) IBOutlet UILabel *kemuLab;
+@property (strong, nonatomic) IBOutlet UILabel *scoresLab;
+@property (strong, nonatomic) IBOutlet UILabel *testTypeLab;
+
 @property (strong, nonatomic) IBOutlet UILabel *xuenianLab;
 @property (strong, nonatomic) IBOutlet UILabel *xueqiLab;
-@property (strong, nonatomic) IBOutlet UILabel *xiaoquLab;
-@property (strong, nonatomic) IBOutlet UILabel *xaingmuLab;
-@property (strong, nonatomic) IBOutlet UILabel *nianjiLab;
-@property (strong, nonatomic) IBOutlet UILabel *banjiLab;
-@property (strong, nonatomic) IBOutlet UILabel *kechengLab;
 @property (strong, nonatomic) IBOutlet UILabel *typeLab;
-@property (strong, nonatomic) IBOutlet UILabel *kaoshiName;
-@property (strong, nonatomic) IBOutlet UIButton *cancleBth;
-@property (strong, nonatomic) IBOutlet UIButton *searchBth;
+@property (strong, nonatomic) IBOutlet UILabel *zongLab;
+@property (strong, nonatomic) IBOutlet UILabel *deFenLab;
 @property (strong, nonatomic) IBOutlet UIView *topView;
-@property (strong, nonatomic) IBOutlet UILabel *titleLab;
-@property (strong, nonatomic) IBOutlet UILabel *banjiOneLab;
-@property (strong, nonatomic) IBOutlet UITableView *bigTableView;
-
+@property (strong, nonatomic) IBOutlet UIScrollView *bigScrollView;
+@property (strong, nonatomic) NSString *schoolyearId;
+@property (strong, nonatomic) NSString *schooltermId;
+@property (strong, nonatomic) NSDictionary *dataDict;
 @end

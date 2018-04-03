@@ -20,4 +20,5 @@
 @property (strong, nonatomic) IBOutlet UILabel *detailLab;
 @property (strong, nonatomic) IBOutlet UIView *threeView;
 @property (strong, nonatomic) IBOutlet UILabel *downNameLab;
+@property (strong, nonatomic) NSDictionary *dataDict;
 @end

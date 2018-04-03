@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+@protocol maxHeiDelegate <NSObject>
 
+@optional
+
+-(void)getMaxHei:(CGFloat)maxHei  withIndex:(NSInteger)index;
+@end
 @interface MessageCenterCell : UITableViewCell
 
 @property (strong, nonatomic) IBOutlet UIView *bigView;
@@ -16,5 +21,6 @@
 @property (strong, nonatomic) IBOutlet UIView *detailView;
 @property (strong, nonatomic) IBOutlet UILabel *titleLab;
 @property (strong, nonatomic) IBOutlet UILabel *detailLaB;
--(void)showModel;
+@property(nonatomic,weak) id<maxHeiDelegate> delegate;
+-(void)showModelWith:(NSDictionary *)dict withIndext:(NSInteger)index;
 @end

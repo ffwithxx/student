@@ -7,7 +7,9 @@
 //
 
 #import "MemberShipVC.h"
-
+#import "BGControl.h"
+#import "AFClient.h"
+#import <SDWebImage/UIImageView+WebCache.h>
 @interface MemberShipVC ()<UITableViewDelegate,UITableViewDataSource>
 
 @end
@@ -28,10 +30,36 @@
 }
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-        self.navigationItem.title = @"修改密码";
+        self.navigationItem.title = @"个人信息";
      [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17],NSForegroundColorAttributeName:[UIColor whiteColor]}];
    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navi_bg_shadow@2x"] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.hidden = NO;
+}
+
+- (void)first {
+    NSString *jsonString = [[NSUserDefaults standardUserDefaults]valueForKey:@"loginData"];
+    NSDictionary *dict = [[BGControl dictionaryWithJsonString:jsonString] valueForKey:@"userInfo"];
+   [self.headImg sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",[dict valueForKey:@"photoUrl"]]] placeholderImage:[UIImage imageNamed:@"icon_moren(1).png"]];
+    self.nameLab.text = [BGControl textIsNull: [dict valueForKey:@"nameCn"]];
+    self.eNameLab.text =  [BGControl textIsNull: [dict valueForKey:@"nameEn"]];
+    self.pinyinLab.text =[BGControl textIsNull: [dict valueForKey:@"namePinyin"]];
+    
+    self.sexLab.text = [NSString stringWithFormat:@"%@",[BGControl textIsNull:[dict valueForKey:@"sex"]] ];
+    self.guojiLab.text = [NSString stringWithFormat:@"%@",[BGControl textIsNull:[dict valueForKey:@"country"]] ];
+     self.birthdayLab.text = [NSString stringWithFormat:@"%@",[BGControl textIsNull:[dict valueForKey:@"birthday"]]];
+    self.ageLab.text =[NSString stringWithFormat:@"%@",[dict valueForKey:@"age"]];
+self.shenfenLab.text = [NSString stringWithFormat:@"%@",[BGControl textIsNull:[dict valueForKey:@"idCard"]]] ;
+    self.huzhaoLab.text =[NSString stringWithFormat:@"%@",[BGControl textIsNull:[NSString stringWithFormat:@"%@",[dict valueForKey:@"passport"]]]] ;
+    self.emailLab.text = [NSString stringWithFormat:@"%@",[BGControl textIsNull:[dict valueForKey:@"email"]]] ;
+self.adressLab.text = [NSString stringWithFormat:@"%@",[BGControl textIsNull:[dict valueForKey:@"address"]]] ;
+    self.tongxinLab.text =  [NSString stringWithFormat:@"%@",[BGControl textIsNull:[dict valueForKey:@"mailingAddr"]]] ;
+    self.xuehaoLab.text = [NSString stringWithFormat:@"%@",[BGControl textIsNull:[NSString stringWithFormat:@"%@",[dict valueForKey:@"code"]]]] ;
+    self.xiangmuLab.text = [NSString stringWithFormat:@"%@", [BGControl textIsNull:[dict valueForKey:@"projectName"]]] ;
+    self.xiaoquLab.text = [NSString stringWithFormat:@"%@",[BGControl textIsNull: [dict valueForKey:@"schoolName"]]];;
+    self.ruxueDateLab.text = [NSString stringWithFormat:@"%@",[NSString stringWithFormat:@"%@",[BGControl textIsNull: [dict valueForKey:@"admissionDate"]]]];
+    self.nianjiLab.text = [BGControl textIsNull: [dict valueForKey:@"gradeName"]];
+    self.banjiLab.text = [NSString stringWithFormat:@"%@",[BGControl textIsNull: [dict valueForKey:@"className"]]];
+    self.zhuangtaiLab.text = [NSString stringWithFormat:@"%@",[BGControl textIsNull: [dict valueForKey:@"status"]]];
 }
 - (IBAction)backClick:(UIButton *)sender {
     [self.navigationController popViewControllerAnimated:YES];

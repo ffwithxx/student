@@ -39,6 +39,8 @@
 }
 #pragma mark --- 初始化view
 - (void)first {
+    self.userTextFile.text = [[NSUserDefaults standardUserDefaults] valueForKey:@"user"];
+    self.pswTextFile.text = [[NSUserDefaults standardUserDefaults] valueForKey:@"psw"];
     self.bottomView.layer.cornerRadius =8.f;
 //    self.bottomView.layer.masksToBounds = YES;
     self.bottomView.layer.shadowColor = [UIColor purpleColor].CGColor;//shadowColor阴影颜色
@@ -68,33 +70,31 @@
         [self Alert:@"请输入密码"];
         return;
     }
-//    [self show];
-//    [[AFClient shareInstance] loginWithUserName:self.userTextFile.text passWord:self.pswTextFile.text progressBlock:^(NSProgress *progress) {
-//
-//    } success:^(id responseBody) {
-//        if ([[responseBody valueForKey:@"code"] integerValue] == 0) {
-//
-//            [[NSUserDefaults standardUserDefaults] setObject:[[responseBody valueForKey:@"data"] valueForKey:@"token"] forKey:@"token"];
-//            [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@", [[[responseBody valueForKey:@"data"] valueForKey:@"userInfo"] valueForKey:@"schoolPid"]] forKey:@"schoolPid"];
-//
-//            [[NSUserDefaults standardUserDefaults] setObject:[[[responseBody valueForKey:@"data"] valueForKey:@"userInfo"] valueForKey:@"schoolPid"] forKey:@"jobCode"];
-//            [[NSUserDefaults standardUserDefaults] setValue:self.pswTextFile.text forKey:@"psw"];
-//            [[NSUserDefaults standardUserDefaults] setValue:self.userTextFile.text forKey:@"user"];
-//            NSError *error;
-//            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[responseBody valueForKey:@"data"] options:0 error:&error];
-//            NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-//            [[NSUserDefaults standardUserDefaults] setValue:jsonString forKey:@"loginData"];
-//
-//        }else{
-//            [self Alert:responseBody[@"msg"]];
-//        }
-//
-//        [self dismiss];
-//    } failure:^(NSError *error) {
-//        [self dismiss];
-//    }];
-//
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"Main" object:nil];
+    [self show];
+    [[AFClient shareInstance] loginWithUserName:self.userTextFile.text passWord:self.pswTextFile.text progressBlock:^(NSProgress *progress) {
+        
+    } success:^(id responseBody) {
+        if ([[responseBody valueForKey:@"code"] integerValue] == 0) {
+            
+            [[NSUserDefaults standardUserDefaults] setObject:[[responseBody valueForKey:@"data"] valueForKey:@"token"] forKey:@"token"];
+            [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@", [[[responseBody valueForKey:@"data"] valueForKey:@"userInfo"] valueForKey:@"schoolPid"]] forKey:@"schoolPid"];
+            
+            [[NSUserDefaults standardUserDefaults] setObject:[[[responseBody valueForKey:@"data"] valueForKey:@"userInfo"] valueForKey:@"schoolPid"] forKey:@"jobCode"];
+            [[NSUserDefaults standardUserDefaults] setValue:self.pswTextFile.text forKey:@"psw"];
+            [[NSUserDefaults standardUserDefaults] setValue:self.userTextFile.text forKey:@"user"];
+            NSError *error;
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[responseBody valueForKey:@"data"] options:0 error:&error];
+            NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            [[NSUserDefaults standardUserDefaults] setValue:jsonString forKey:@"loginData"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"Main" object:nil];
+        }else{
+            [self Alert:responseBody[@"msg"]];
+        }
+        
+        [self dismiss];
+    } failure:^(NSError *error) {
+        [self dismiss];
+    }];
 }
 
 //点击屏幕空白处去掉键盘

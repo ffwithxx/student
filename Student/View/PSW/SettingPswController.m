@@ -9,6 +9,7 @@
 #import "SettingPswController.h"
 #import "AppDelegate.h"
 #import "BGControl.h"
+#import "AFClient.h"
 
 
 @interface SettingPswController ()<UITextFieldDelegate>
@@ -24,15 +25,8 @@
     self.oldPSWText.delegate = self;
     self.PSWText.delegate = self;
     self.navigationController.navigationBar.hidden = NO;
-  
-        self.bigView.frame = CGRectMake(0, 0, kScreenSize.width, kScreenSize.height);
-  
-    
-    
-    
-  
-    
-    // Do any additional setup after loading the view.
+  self.bigView.frame = CGRectMake(0, 0, kScreenSize.width, kScreenSize.height);
+ 
 }
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -50,17 +44,42 @@
         
         if ([BGControl isNULLOfString:self.oldPSWText.text]) {
             [self Alert:@"请输入旧密码"];
+            return;
         }else if ([BGControl isNULLOfString:self.PSWText.text]){
             [self Alert:@"请输入新密码"];
+            return;
         }else if ([BGControl isNULLOfString:self.oneMorePswText.text]){
             [self Alert:@"请再次输入新密码"];
-        }else if ([self.PSWText.text isEqualToString:self.oneMorePswText.text]){
+            return;
+        }else if (![self.PSWText.text isEqualToString:self.oneMorePswText.text]){
             [self Alert:@"两次新密码输入不同"];
+            return;
         }else{
+            NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:self.oldPSWText.text,@"oldPass",self.PSWText.text,@"newPass",nil];
             [self.oldPSWText resignFirstResponder];
             [self.PSWText resignFirstResponder];
             [self.oneMorePswText resignFirstResponder];
-            [self Alert:@"保存成功!"];
+            
+            [self show];
+            [[AFClient shareInstance]UpdatePasswordwithDict:dict progressBlock:^(NSProgress *progress) {
+                
+            } success:^(id responseBody) {
+                if ([[responseBody valueForKey:@"code"] integerValue] == 0) {
+                    self.oldPSWText.text = @"";
+                    self.PSWText.text = @"";
+                    self.oneMorePswText.text = @"";
+                    [self Alert:@"保存成功!"];
+                    [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"psw"];
+                    [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"user"];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"tLogin" object:nil];
+                }else{
+                    [self Alert:responseBody[@"msg"]];
+                }
+                [self dismiss];
+            } failure:^(NSError *error) {
+                
+            }];
+            
         }
     }
         

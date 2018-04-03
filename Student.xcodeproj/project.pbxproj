@@ -35,6 +35,8 @@
 		120602CE1FEA02620041BBB2 /* login_pic_logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 120602C01FEA02620041BBB2 /* login_pic_logo@2x.png */; };
 		120602CF1FEA02620041BBB2 /* cont_icon_enter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 120602C11FEA02620041BBB2 /* cont_icon_enter@2x.png */; };
 		120602D01FEA02620041BBB2 /* cont_icon_disc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 120602C21FEA02620041BBB2 /* cont_icon_disc@2x.png */; };
+		1273757A206B88E8002B26F6 /* BaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 12737578206B88E8002B26F6 /* BaseModel.m */; };
+		1273757D206B88F3002B26F6 /* feedBackModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1273757B206B88F3002B26F6 /* feedBackModel.m */; };
 		127ADF711FFDC76B0081D102 /* MemberShipVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 127ADF701FFDC76B0081D102 /* MemberShipVC.m */; };
 		127ADF75200379280081D102 /* TwoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 127ADF74200379280081D102 /* TwoCell.m */; };
 		127ADF7A20045AA80081D102 /* MessageCenterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 127ADF7920045AA80081D102 /* MessageCenterCell.m */; };
@@ -169,6 +171,10 @@
 		120602C01FEA02620041BBB2 /* login_pic_logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_pic_logo@2x.png"; sourceTree = "<group>"; };
 		120602C11FEA02620041BBB2 /* cont_icon_enter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cont_icon_enter@2x.png"; sourceTree = "<group>"; };
 		120602C21FEA02620041BBB2 /* cont_icon_disc@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cont_icon_disc@2x.png"; sourceTree = "<group>"; };
+		12737578206B88E8002B26F6 /* BaseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseModel.m; sourceTree = "<group>"; };
+		12737579206B88E8002B26F6 /* BaseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseModel.h; sourceTree = "<group>"; };
+		1273757B206B88F3002B26F6 /* feedBackModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = feedBackModel.m; sourceTree = "<group>"; };
+		1273757C206B88F3002B26F6 /* feedBackModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = feedBackModel.h; sourceTree = "<group>"; };
 		127ADF6F1FFDC76B0081D102 /* MemberShipVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MemberShipVC.h; sourceTree = "<group>"; };
 		127ADF701FFDC76B0081D102 /* MemberShipVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MemberShipVC.m; sourceTree = "<group>"; };
 		127ADF73200379280081D102 /* TwoCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TwoCell.h; sourceTree = "<group>"; };
@@ -367,6 +373,7 @@
 		120602A01FE7A0390041BBB2 /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				12737577206B889D002B26F6 /* Model */,
 				12EAD6AF2008D67A0044071A /* Student.pch */,
 				12EAD6A720085FC70044071A /* AFCk */,
 				120602B41FEA02560041BBB2 /* icon */,
@@ -475,6 +482,17 @@
 				120602BF1FEA02620041BBB2 /* navi_icon_news@2x.png */,
 			);
 			path = icon;
+			sourceTree = "<group>";
+		};
+		12737577206B889D002B26F6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				12737579206B88E8002B26F6 /* BaseModel.h */,
+				12737578206B88E8002B26F6 /* BaseModel.m */,
+				1273757C206B88F3002B26F6 /* feedBackModel.h */,
+				1273757B206B88F3002B26F6 /* feedBackModel.m */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		127ADF722003790D0081D102 /* TWO */ = {
@@ -883,6 +901,7 @@
 				120602B31FE7A6120041BBB2 /* LeftSlideViewController.m in Sources */,
 				127ADF711FFDC76B0081D102 /* MemberShipVC.m in Sources */,
 				120602AA1FE7A4B60041BBB2 /* LeftViewController.m in Sources */,
+				1273757D206B88F3002B26F6 /* feedBackModel.m in Sources */,
 				128D694F2022B1EB00546354 /* AFClient.m in Sources */,
 				127ADF862005C0AE0081D102 /* sign.m in Sources */,
 				1283A8B41FF63685001FDBDE /* KIKeyChain.m in Sources */,
@@ -916,6 +935,7 @@
 				1204201920075D9300D8E558 /* ManagementCell.m in Sources */,
 				128D69612022E50F00546354 /* kantuViewController.m in Sources */,
 				1283A8B51FF63685001FDBDE /* ChineseString.m in Sources */,
+				1273757A206B88E8002B26F6 /* BaseModel.m in Sources */,
 				127ADF952006085E0081D102 /* TestScoresVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -20,8 +20,11 @@
         [_signDelegate postStr:@"1"];
     }
 }
--(void)showModel{
-    
+-(void)showModelWithDict:(NSDictionary *)dict{
+    self.timeLab.text = [NSString stringWithFormat:@"%@-%@",[dict valueForKey:@"timeStart"],[dict valueForKey:@"timeOff"]];
+    self.adressLab.text = [dict valueForKey:@"classroomName"];
+    self.nameLab.text =  [dict valueForKey:@"leaderName"];
+     self.kemuLab.text =  [dict valueForKey:@"courseName"];
     self.signBth.layer.cornerRadius = 5.f;
     self.signBth.layer.borderColor = KTabBarColor.CGColor;
     self.signBth.layer.borderWidth = 2.f;

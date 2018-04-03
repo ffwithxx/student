@@ -18,7 +18,9 @@
 @interface OneCell : UITableViewCell
 @property (strong, nonatomic) IBOutlet UILabel *timeLab;
 @property (strong, nonatomic) IBOutlet UILabel *kemuLab;
+@property (strong, nonatomic) IBOutlet UILabel *adressLab;
+@property (strong, nonatomic) IBOutlet UILabel *nameLab;
 @property (strong, nonatomic) IBOutlet UIButton *signBth;
 @property (strong, nonatomic) id<siginDelegate> signDelegate;
--(void)showModel;
+-(void)showModelWithDict:(NSDictionary *)dict;
 @end

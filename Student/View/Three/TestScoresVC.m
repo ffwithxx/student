@@ -8,6 +8,7 @@
 
 #import "TestScoresVC.h"
 #import "TestScoresCell.h"
+#import "AFClient.h"
 #define  kCellName @"TestScoresCell"
 @interface TestScoresVC ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate> {
         TestScoresCell *_cell;
@@ -19,14 +20,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.bigScrollView.hidden = YES;
-//    if (kiPhoneX) {
-//        self.naVie.frame = CGRectMake(0, 0, kScreenSize.width, kNavHeight);
-        self.bigScrollView.frame = CGRectMake(0, 0, kScreenSize.width, kScreenSize.height);
-        self.bigTableView.frame = CGRectMake(0, 0, kScreenSize.width, kScreenSize.height);
-//    }
-    self.topView.frame = CGRectMake(0, 0, kScreenSize.width, 100);
-    [self.bigTableView setTableHeaderView:self.topView];
+ 
+    if (kiPhoneX) {
+        self.naVie.frame = CGRectMake(0, 0, kScreenSize.width, kNavHeight);
+        self.bigScrollView.frame = CGRectMake(0, kNavHeight, kScreenSize.width, 800);
+    
+    }
+    [self first];
 }
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -35,67 +35,37 @@
    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"navi_bg_shadow@2x"] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.hidden = NO;
 }
+- (void)first {
+    self.testTypeLab.text = [self.dataDict valueForKey:@"examName"];
+    self.scoresLab.text = [self.dataDict valueForKey:@"achievement"];
+    self.xuenianLab.text = [NSString stringWithFormat:@"%@",[self.dataDict valueForKey:@"syName"]];
+    self.xueqiLab.text = [self.dataDict valueForKey:@"stName"];
+    self.kemuLab.text = [self.dataDict valueForKey:@"projectName"];
+    self.typeLab.text = [self.dataDict valueForKey:@"examTypeName"];
+    self.zongLab.text = [NSString stringWithFormat:@"%@",[self.dataDict valueForKey:@"tScore"]];
+    self.deFenLab.text = [NSString stringWithFormat:@"%@",[self.dataDict valueForKey:@"score"]];
+//    [self show];
+//    [[AFClient shareInstance] getAchievementWithSchoolyearIdWith:self.schoolyearId withschooltermId:self.schooltermId progressBlock:^(NSProgress *progress) {
+//
+//    } success:^(id responseBody) {
+//        if ([[responseBody valueForKey:@"code"] integerValue] == 0) {
+//
+//
+//            [self dismiss];
+//        }else{
+//            [self Alert:responseBody[@"msg"]];
+//        }
+//
+//        [self dismiss];
+//    } failure:^(NSError *error) {
+//        [self dismiss];
+//    }];
+}
 - (IBAction)backClick:(UIButton *)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
-- (IBAction)buttonClick:(UIButton *)sender {
-    if (sender.tag == 310 ||sender.tag == 311) {
-        [self.bigScrollView removeFromSuperview];
-        self.bigScrollView.hidden = YES;
-        self.blackButton.hidden = YES;
-    }
-}
-- (void)blackButtonClick {
-    [self.bigScrollView removeFromSuperview];
-    self.bigScrollView.hidden = YES;
-    self.blackButton.hidden = YES;
-}
-#pragma 展示筛选条件
-- (IBAction)tiaoClick:(UIButton *)sender {
-    self.blackButton.hidden = NO;
-    self.bigScrollView.delegate = self;
-    self.bigScrollView.showsVerticalScrollIndicator = NO;
-    self.bigScrollView.contentSize = CGSizeMake(kScreenSize.width,550);
-    self.bigScrollView.scrollEnabled = YES;
-    self.bigScrollView.hidden = NO;
-    self.cancleBth.layer.cornerRadius = 5.f;
-    self.cancleBth.layer.borderColor = KTabBarColor.CGColor;
-    self.cancleBth.layer.borderWidth = 1.f;
-    self.searchBth.layer.cornerRadius = 5.f;
-    [self.view addSubview:self.bigScrollView];
-    
-}
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    _cell = [tableView dequeueReusableCellWithIdentifier:kCellName];
-    if (!_cell) {
-        _cell = [[TestScoresCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellName];
-    }
-    CGRect cellFrame = _cell.contentView.frame;
-    cellFrame.size.width = kScreenSize.width;
-    [_cell.contentView setFrame:cellFrame];
-    //    XyModel *model = self.dataArray[indexPath.row];
-    
-    
-    return _cell;
-    
-    
-}
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    return 55;
-    
-    
-}
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 10;
-    
-}
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    
-    return 1;
-    
-}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

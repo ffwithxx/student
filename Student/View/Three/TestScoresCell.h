@@ -12,5 +12,11 @@
 @property (strong, nonatomic) IBOutlet UILabel *nameLab;
 @property (strong, nonatomic) IBOutlet UILabel *levelLab;
 @property (strong, nonatomic) IBOutlet UILabel *scoreLab;
+@property (strong, nonatomic) IBOutlet UILabel *oneLab;
+@property (strong, nonatomic) IBOutlet UILabel *twoLab;
+@property (strong, nonatomic) IBOutlet UILabel *threeLab;
+@property (strong, nonatomic) IBOutlet UILabel *fourLab;
 
+
+- (void)showDict:(NSDictionary *)dict;
 @end

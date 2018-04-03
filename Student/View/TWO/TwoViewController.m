@@ -12,13 +12,16 @@
 #import "sign.h"
 #import "SZCalendarPicker.h"
 #import "BGControl.h"
+#import "AFClient.h"
 @interface TwoViewController ()<UITableViewDelegate,UITableViewDataSource,attendanceDelegate,choiceDelegate,UITextViewDelegate>{
     TwoCell *_cell;
     sign *signView;
     NSString *typeStr;
     NSString *today;
     NSDate *choiceDate;
-     NSInteger selectIndex;
+    NSInteger selectIndex;
+    NSString *timeStr;
+    NSArray *dateOneArr;
   
 }
 
@@ -28,7 +31,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+     self.bigTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    dateOneArr = [NSArray array];
     choiceDate = [NSDate date];
+    self.dataArray = [NSMutableArray array];
+    [self createTimeView];
+    [self getData];
     typeStr = @"301";
   
 
@@ -36,7 +44,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden = YES;
-      [self createTimeView];
+    
 }
 - (IBAction)deteClick:(UIButton *)sender {
         self.topView.frame = CGRectMake(0, 0, kScreenSize.width, 130);
@@ -50,6 +58,8 @@
     
         calendarPicker.calendarBlock = ^(NSInteger day, NSInteger month, NSInteger year){
             NSString *str = [NSString stringWithFormat:@"%i-%i-%i", year,month,day];
+            timeStr = str;
+            [self getData];
              choiceDate = [BGControl stringToDate:str];
             [self createTimeView];
         };
@@ -63,7 +73,7 @@
     }
     NSArray *weekArr = @[@"日",@"一",@"二",@"三",@"四",@"五",@"六"];
     CGFloat weekLabWidth = kScreenSize.width/7;
-    NSArray *dateOneArr = [self getCurrentWeekWithDate:choiceDate];
+   dateOneArr = [self getCurrentWeekWithDate:choiceDate];
     NSArray *arr = [[NSArray alloc] init];
     arr = [today componentsSeparatedByString:@"-"];
     NSString *todayDayStr = arr[2];
@@ -79,9 +89,10 @@
          [bthLab addTarget:self action:@selector(dateClick:) forControlEvents:UIControlEventTouchUpInside];
         
         NSArray *timeArr = [dateOneArr[i] componentsSeparatedByString:@"-"];
-        [bthLab setTitle:timeArr[1] forState:UIControlStateNormal] ;
+        [bthLab setTitle:timeArr[2] forState:UIControlStateNormal] ;
          bthLab.tag = 500+i;
-        if ([todayDayStr intValue] == [timeArr[1]intValue]) {
+        if ([todayDayStr intValue] == [timeArr[2]intValue]) {
+            timeStr = dateOneArr[i];
             [bthLab setBackgroundImage:[UIImage imageNamed:@"navi_bg_shadow@2x"] forState:UIControlStateNormal];
             bthLab.titleLabel.textColor = [UIColor whiteColor];
             bthLab.clipsToBounds = YES;
@@ -98,6 +109,23 @@
         
     }
 }
+- (void)getData {
+    [self show];
+    [[AFClient shareInstance] studentAttendanceWithStudent:@"str" withStime:timeStr progressBlock:^(NSProgress *progress) {
+        
+    } success:^(id responseBody) {
+        if ([[responseBody valueForKey:@"code"] integerValue] == 0) {
+            self.dataArray = [responseBody valueForKey:@"data"];
+            
+        }else{
+            [self Alert:responseBody[@"msg"]];
+        }
+        [self.bigTableView reloadData];
+        [self dismiss];
+    } failure:^(NSError *error) {
+        [self dismiss];
+    }];
+}
 - (void)dateClick:(UIButton *)bth {
     UIButton *find_bth = (UIButton *)[self.view viewWithTag:selectIndex];
   
@@ -111,7 +139,8 @@
     select_bth.clipsToBounds = YES;
     select_bth.layer.cornerRadius = 15.f;
     selectIndex = bth.tag;
-    
+    timeStr = dateOneArr[selectIndex-500];
+    [self getData];
 }
 /**
  *  获取当前时间所在一周的第一天和最后一天
@@ -172,7 +201,7 @@
         NSDate *curDate = [NSDate dateWithTimeInterval:secondsPerDay sinceDate:choiceDate];
        
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"M-d"];
+        [dateFormatter setDateFormat:@"Y-M-d"];
         NSString *dateStr = [dateFormatter stringFromDate:curDate];//几月几号
         //        NSString *dateStr = @"5月31日";
         NSDateFormatter *weekFormatter = [[NSDateFormatter alloc] init];
@@ -193,7 +222,7 @@
     
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 20;
+    return self.dataArray.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -211,7 +240,8 @@
     cellFrame.size.width = kScreenSize.width;
     _cell.attendanceDelegate = self;
     [_cell.contentView setFrame:cellFrame];
-    [_cell showModel];
+    NSDictionary *dict = self.dataArray[indexPath.row];
+    [_cell showModelWithDict:dict];
     return _cell;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -221,6 +251,11 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 15;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
 #pragma  点击事件代理

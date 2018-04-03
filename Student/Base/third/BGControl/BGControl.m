@@ -1434,4 +1434,48 @@ CGRect oldframe;
     CGSize size = [aString sizeWithFont:font constrainedToSize:labelSize lineBreakMode:NSLineBreakByWordWrapping];
     return size.height;
 }
++ (NSString *)textIsNull:(NSString *)str{
+    if (str == nil) {
+        return @"";
+    }
+    
+    if (str == NULL) {
+        return @"";
+    }
+    
+    if ([@"" isEqualToString:str]) {
+        return @"";
+    }
+    
+    if ([str isKindOfClass:[NSNull class]]) {
+        return @"";
+    }
+    
+    if ([str isEqual:[NSNull class]])
+    {
+        return @"";
+    }
+    if ([str isEqualToString:@"(null)"]) {
+        return @"";
+    }
+    if ([str isEqualToString:@"<null>"]) {
+        return @"";
+    }
+    if ([[str stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length]==0) {
+        return @"";
+    }
+    return str;
+    
+}
+//时间戳转字符串时间
++(NSString *)timeStampForDateStringWith:(NSString *)timeStampStr {
+    
+    NSTimeInterval interval    =[timeStampStr doubleValue] / 1000.0;
+    NSDate *date  = [NSDate dateWithTimeIntervalSince1970:interval];
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString *dateString = [formatter stringFromDate: date];
+    return dateString;
+}
 @end

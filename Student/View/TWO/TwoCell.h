@@ -19,6 +19,8 @@
 @property (strong, nonatomic) IBOutlet UIButton *otherBth;//301
 @property (strong, nonatomic) IBOutlet UIButton *signBth;
 @property (strong, nonatomic) IBOutlet UIImageView *iconImgView;
+@property (strong, nonatomic) IBOutlet UILabel *timeLab;
 @property (strong, nonatomic) id<attendanceDelegate> attendanceDelegate;
-- (void)showModel;
+@property (strong, nonatomic) IBOutlet UILabel *kemuLab;
+- (void)showModelWithDict:(NSDictionary *)dict;
 @end

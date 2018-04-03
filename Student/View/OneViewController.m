@@ -10,11 +10,18 @@
 #import "OneCell.h"
 #define kCellName @"OneCell"
 #import "CourseAttendanceVC.h"
+#import "AFClient.h"
 @interface OneViewController ()<UITableViewDelegate,UITableViewDataSource,siginDelegate>{
       OneCell *_cell;
     NSString *today;
     NSInteger selectIndex;
-    
+    NSMutableArray *oneArr;
+    NSMutableArray *twoArr;
+    NSMutableArray *threeArr;
+    NSMutableArray *fourArr;
+    NSMutableArray *fiveArr;
+    NSMutableArray *sixArr;
+    NSMutableArray *sevenArr;
 }
 
 @end
@@ -23,11 +30,23 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    oneArr = [NSMutableArray array];
+    twoArr = [NSMutableArray array];
+    threeArr = [NSMutableArray array];
+    fourArr = [NSMutableArray array];
+    fiveArr = [NSMutableArray array];
+    sixArr = [NSMutableArray array];
+    sevenArr = [NSMutableArray array];
+    self.dataArray = [NSMutableArray array];
+    self.bigTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self createTimeView];
+   
     // Do any additional setup after loading the view.
 }
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+      [self getData];
     self.navigationController.navigationBar.hidden = YES;
 }
 
@@ -73,6 +92,59 @@
    
     }
 }
+
+- (void)getData {
+    [self show];
+    [[AFClient shareInstance] TeacherScheduleBystudentId:@"str" progressBlock:^(NSProgress *progress) {
+        
+    } success:^(id responseBody) {
+        if ([[responseBody valueForKey:@"code"] integerValue] == 0) {
+            [oneArr removeAllObjects];
+            [twoArr removeAllObjects];
+            [threeArr removeAllObjects];
+            [fourArr removeAllObjects];
+            [fiveArr removeAllObjects];
+            [sixArr removeAllObjects];
+            [sevenArr removeAllObjects];
+            NSArray *arr = responseBody[@"data"];
+            for (int i = 0; i < arr.count; i++) {
+                NSDictionary *dict = arr[i];
+            
+                if ([[dict valueForKey:@"weekday"] integerValue] == 1) {
+                    
+                    [oneArr addObject:dict];
+                }else if ([[dict valueForKey:@"weekday"] integerValue] == 2) {
+                    
+                    [twoArr addObject:dict];
+                }else if ([[dict valueForKey:@"weekday"] integerValue] == 3) {
+                    
+                    [threeArr addObject:dict];
+                }else if ([[dict valueForKey:@"weekday"] integerValue] == 4) {
+                    
+                    [fourArr addObject:dict];
+                }else if ([[dict valueForKey:@"weekday"] integerValue] == 5) {
+                    
+                    [fiveArr addObject:dict];
+                }else if ([[dict valueForKey:@"weekday"] integerValue] == 6) {
+                    
+                    [sixArr addObject:dict];
+                }else if ([[dict valueForKey:@"weekday"] integerValue] == 7) {
+                    
+                    [sevenArr addObject:dict];
+                }
+            }
+            [self.bigTableView reloadData];
+            [self dismiss];
+        }else{
+            [self dismiss];
+            [self Alert:responseBody[@"msg"]];
+        }
+        
+        [self dismiss];
+    } failure:^(NSError *error) {
+        [self dismiss];
+    }];
+}
 - (void)dateClick:(UIButton *)bth {
     UIButton *find_bth = (UIButton *)[self.view viewWithTag:selectIndex];
     [find_bth setTitleColor:KTextgrayColor forState:UIControlStateNormal];
@@ -82,6 +154,7 @@
     [select_bth setTitleColor:KTextBlackColor forState:UIControlStateNormal];
     [select_bth setBackgroundColor:KBgColor];
      selectIndex = bth.tag;
+     [self.bigTableView reloadData];
     
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -95,7 +168,24 @@
     cellFrame.size.width = kScreenSize.width;
     [_cell.contentView setFrame:cellFrame];
     _cell.signDelegate = self;
-    [_cell showModel];
+    NSDictionary *dict = [[NSDictionary alloc] init];
+    if (selectIndex == 500) {
+        dict = sevenArr[indexPath.row];
+    }else if (selectIndex == 501){
+        dict = oneArr[indexPath.row];
+    }else if (selectIndex == 502){
+        dict = twoArr[indexPath.row];
+    }else if (selectIndex == 503){
+        dict = threeArr[indexPath.row];
+    }else if (selectIndex == 504){
+        dict = fourArr[indexPath.row];
+    }else if (selectIndex == 505){
+        dict = fiveArr[indexPath.row];
+    }else if (selectIndex == 506){
+        dict = sixArr[indexPath.row];
+    }
+    
+    [_cell showModelWithDict:dict];
     return _cell;
     
     
@@ -112,6 +202,21 @@
     
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (selectIndex == 500) {
+        return sevenArr.count;
+    }else if (selectIndex == 501){
+        return oneArr.count;
+    }else if (selectIndex == 502){
+        return twoArr.count;
+    }else if (selectIndex == 503){
+        return threeArr.count;
+    }else if (selectIndex == 504){
+        return fourArr.count;
+    }else if (selectIndex == 505){
+        return fiveArr.count;
+    }else if (selectIndex == 506){
+        return sixArr.count;
+    }
     return 10;
     
 }

@@ -14,7 +14,12 @@
     [super awakeFromNib];
     // Initialization code
 }
-
+- (void)showDict:(NSDictionary *)dict {
+    self.oneLab.text = [NSString stringWithFormat:@"%@%@%@",@"《",[dict valueForKey:@"examTypeName"],@"》"];
+    self.twoLab.text = [dict valueForKey:@"projectName"];
+    self.threeLab.text = [dict valueForKey:@"examName"];
+    self.fourLab.text = [dict valueForKey:@"achievement"];
+}
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
 

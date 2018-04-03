@@ -10,7 +10,7 @@
 
 @interface ThreeViewController : JJBaseController
 @property (strong, nonatomic) IBOutlet UITableView *bigTableView;
-@property (strong, nonatomic) IBOutlet UIView *topView;
+
 @property (strong, nonatomic) IBOutlet UILabel *xuenianLab;
 @property (strong, nonatomic) IBOutlet UILabel *xueqiLab;
 @property (strong, nonatomic) IBOutlet UILabel *xiaoquLab;
@@ -21,5 +21,16 @@
 @property (strong, nonatomic) IBOutlet UILabel *typeLab;
 @property (strong, nonatomic) IBOutlet UILabel *nameLab;
 @property (strong, nonatomic) IBOutlet UIButton *searchBth;
+@property (strong, nonatomic) IBOutlet UIView *topView;
+@property (strong, nonatomic) IBOutlet UIView *oneView;
+@property (strong, nonatomic) IBOutlet UIView *twoView;
+@property (strong, nonatomic) IBOutlet UIView *threeView;
+@property (strong, nonatomic) IBOutlet UIView *fourView;
+@property (strong, nonatomic) IBOutlet UIButton *signBth;
+@property (strong, nonatomic) IBOutlet UIScrollView *oneScroll;
+@property (strong, nonatomic) IBOutlet UIScrollView *twoScroll;
+@property (strong, nonatomic) IBOutlet UIScrollView *threeScroll;
+@property (strong, nonatomic) IBOutlet UIScrollView *fourScroll;
+@property (strong, nonatomic) IBOutlet UIView *topViewOne;
 
 @end
